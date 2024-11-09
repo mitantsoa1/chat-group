@@ -1,0 +1,74 @@
+x-common: &common
+  registry: mirror.gcr.io
+
+services:
+  database:
+    image: mysql:8.0
+    # restart: unless-stopped
+    command: --default-authentication-plugin=mysql_native_password --bind-address=0.0.0.0
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: symfony_react_chat_group
+      MYSQL_USER: symfony_user
+      MYSQL_PASSWORD: root
+    ports:
+      - "3305:3306"
+    volumes:
+      - ./var:/var/www/var
+      - ./tools/docker/mysql:/var/lib/mysql
+    networks:
+      - app-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    # restart: unless-stopped
+    depends_on:
+      - database
+    ports:
+      - "8885:80"
+    environment:
+      PMA_HOST: database
+      MYSQL_ROOT_PASSWORD: root
+    networks:
+      - app-network
+
+  mailhog:
+    image: mailhog/mailhog
+    # restart: unless-stopped
+    ports:
+      - "8025:8025"
+      - "1025:1025"
+    networks:
+      - mail-network
+      - app-network
+
+  mercure:
+    image: dunglas/mercure
+    # restart: unless-stopped
+    environment:
+      SERVER_NAME: ":80, :443"
+      MERCURE_PUBLISHER_JWT_KEY: "${MERCURE_PUBLISHER_JWT_KEY}"
+      MERCURE_SUBSCRIBER_JWT_KEY: "${MERCURE_SUBSCRIBER_JWT_KEY}"
+      MERCURE_EXTRA_DIRECTIVES: |
+        cors_origins *
+        cors_allowed_headers "Content-Type,Authorization"
+        cors_exposed_headers "Link"
+        cors_credentials on
+        anonymous
+        publish_origins *
+        demo
+    ports:
+      - "3000:80"
+      - "3001:443"
+
+volumes:
+  db_data:
+    driver: local
+  mercure_data:
+  mercure_config:
+
+networks:
+  app-network:
+    driver: bridge
+  mail-network:
+    driver: bridge

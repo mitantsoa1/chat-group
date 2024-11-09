@@ -1,0 +1,15 @@
+{# templates/chat/index.html.twig #}
+
+{% extends 'base.html.twig' %}
+
+{% block body %}
+	{# Le contenu spécifique à la page de chat peut être ajouté ici si nécessaire #}
+{% endblock %}
+
+{% block javascripts %}
+	{{ parent() }}
+	<script>
+		window.MERCURE_PUBLIC_URL = '{{ mercure_public_url }}';
+	</script>
+	{{ encore_entry_script_tags('app') }}
+{% endblock %}

@@ -1,0 +1,77 @@
+{# {% extends 'base.html.twig' %} #}
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>C.G | Login</title>
+		{{ encore_entry_link_tags('app') }}
+
+	</head>
+	<body>
+
+
+		<div class="flex items-center justify-center min-h-screen px-4 py-12 bg-gray-50 sm:px-6 lg:px-8">
+			<div class="w-full max-w-md space-y-8">
+				<div>
+					<h2 class="mt-6 text-3xl font-extrabold text-center text-gray-900">
+						Please sign in
+					</h2>
+				</div>
+				<form class="mt-8 space-y-6" method="post">
+					{% if error %}
+						<div class="p-4 rounded-md bg-red-50">
+							<div class="text-sm text-red-700">
+								{{ error.messageKey|trans(error.messageData, 'security') }}
+							</div>
+						</div>
+					{% endif %}
+
+					{% if app.user %}
+						<div class="mb-3 text-sm">
+							You are logged in as
+							{{ app.user.userIdentifier }},
+							<a href="{{ path('app_logout') }}" class="font-medium text-indigo-600 hover:text-indigo-500">Logout</a>
+						</div>
+					{% endif %}
+
+					<input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+					<div class="-space-y-px rounded-md shadow-sm">
+						<div>
+							<label for="inputEmail" class="sr-only">Email</label>
+							<input id="inputEmail" name="email" type="email" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Email address" value="{{ last_username }}">
+						</div>
+						<div>
+							<label for="inputPassword" class="sr-only">Password</label>
+							<input id="inputPassword" name="password" type="password" required class="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm" placeholder="Password">
+						</div>
+					</div>
+
+					<div class="flex items-center justify-between">
+						<div class="flex items-center">
+							<input id="_remember_me" name="_remember_me" type="checkbox" class="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500">
+							<label for="_remember_me" class="block ml-2 text-sm text-gray-900">
+								Remember me
+							</label>
+						</div>
+					</div>
+
+					<div>
+						<button type="submit" class="relative flex justify-center w-full px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md group hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+							Sign in
+						</button>
+					</div>
+				</form>
+				<div class="text-center">
+					<a href="{{ path('app_register') }}" class="font-medium text-indigo-600 hover:text-indigo-500">
+						Sign up
+					</a>
+				</div>
+			</div>
+		</div>
+		{{ encore_entry_script_tags('app') }}
+
+	</body>
+</html>
