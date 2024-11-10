@@ -174,8 +174,7 @@ const Main = () => {
             <></>
           ) : currentUser ? (
             <div className="flex items-center space-x-2">
-              <div className="w-6 h-6 -mt-1 bg-white border border-white rounded-full"></div>
-              <div>{currentUser.username}</div>
+              <div>{currentUser.photoProfile ?? ""}</div>
             </div>
           ) : (
             <p>Erreur de chargement de l'utilisateur</p>

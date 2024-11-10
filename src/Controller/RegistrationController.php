@@ -15,7 +15,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 
-class RegistrationController extends AbstractController
+class RegistrationController extends BaseController
 {
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, Security $security, EntityManagerInterface $entityManager, EventDispatcherInterface $eventDispatcher): Response
@@ -30,6 +30,13 @@ class RegistrationController extends AbstractController
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
+
+            $file = $form->get('profilePicture')->getData();
+
+            if ($file) {
+                $uploadData = $this->uploadFile($file, 'profile_photos_directory', '/uploads/profiles');
+                $user->setProfilePicture($uploadData['filename']);
+            }
 
 
             // Dispatch the user.registered event

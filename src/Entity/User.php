@@ -59,6 +59,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user.read'])]
     private bool $isConnected = false;
 
+    #[Groups(['user.read'])]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $profilePicture = null;
+
 
     public function __construct()
     {
@@ -220,5 +224,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString()
     {
         return $this->username;
+    }
+
+    public function getProfilePicture(): ?string
+    {
+        return $this->profilePicture;
+    }
+
+    public function setProfilePicture(?string $profilePicture): static
+    {
+        $this->profilePicture = $profilePicture;
+
+        return $this;
     }
 }

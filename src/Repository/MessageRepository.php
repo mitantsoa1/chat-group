@@ -66,7 +66,8 @@ class MessageRepository extends ServiceEntityRepository
                    u.id as user_id,
                    u.email,
                    u.roles,
-                   u.username
+                   u.username,
+                   u.profile_picture
             FROM message m INNER JOIN user u ON m.user_id = u.id WHERE JSON_CONTAINS(m.send_to, :id, "$") ORDER BY m.created_at ASC
         ';
 
@@ -90,6 +91,7 @@ class MessageRepository extends ServiceEntityRepository
                     'email' => $row['email'],
                     'roles' => json_decode($row['roles'], true),
                     'username' => $row['username'],
+                    'profilePicture' => $row['profile_picture'],
                 ]
             ];
         }, $results);

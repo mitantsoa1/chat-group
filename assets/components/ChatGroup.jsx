@@ -12,6 +12,7 @@ function ChatGroup({ group, currentUser }) {
   const [btnWriting, setBtnWriting] = useState("block");
   const messagesEndRef = useRef(null);
 
+  const BASE_URL = "https://localhost:8000";
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -166,6 +167,8 @@ function ChatGroup({ group, currentUser }) {
           {messages.map((item) => {
             const messageUserId =
               item.user.id !== undefined ? item.user.id : currentUser.id;
+
+            const profilePicturePath = `${BASE_URL}/uploads/profiles/${item.user.profilePicture}`;
             return (
               <li
                 key={item.message.id + "" + uuidv4()}
@@ -187,8 +190,15 @@ function ChatGroup({ group, currentUser }) {
                         : "items-start"
                     }`}
                   >
-                    <small className="text-[10px] text-gray-500 mb-1">
-                      {item.user.username}
+                    <small className="text-[10px] text-gray-500 mb-1 flex flex-row">
+                      <img
+                        src={profilePicturePath}
+                        alt="image"
+                        className="mr-2 rounded-full w-7 h-7"
+                      />
+                      <span className="flex items-center">
+                        {item.user.username}
+                      </span>
                     </small>
 
                     <div

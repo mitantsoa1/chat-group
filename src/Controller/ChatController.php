@@ -85,6 +85,7 @@ class ChatController extends AbstractController
                 'email' => $user->getEmail(),
                 'roles' => $this->getUser()->getRoles(),
                 'username' => $this->getUser()->getUsername(),
+                'profilePicture' => $this->getUser()->getProfilePicture(),
             ]
         ];
 
