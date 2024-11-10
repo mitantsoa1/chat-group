@@ -6,6 +6,8 @@ import formatDate from "../_helpers";
 function ChatGroup({ group, currentUser }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
+  const [notMembers, setNotMembers] = useState([]);
+
   const [writing, setWriting] = useState("hidden");
   const [btnWriting, setBtnWriting] = useState("block");
   const messagesEndRef = useRef(null);
@@ -122,8 +124,41 @@ function ChatGroup({ group, currentUser }) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300">
+      <div className="flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300">
         {group ? group.name : "Sélectionner un groupe"}
+        {group && (
+          <div className="relative z-0 flex ml-2 -space-x-2 avatar-group rtl:space-x-reverse">
+            <div className="avatar">
+              <div className="w-6 h-6 overflow-hidden rounded-full">
+                <img
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="Avatar 1"
+                />
+              </div>
+            </div>
+            <div className="avatar">
+              <div className="w-6 h-6 overflow-hidden rounded-full">
+                <img
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="Avatar 2"
+                />
+              </div>
+            </div>
+            <div className="avatar">
+              <div className="w-6 h-6 overflow-hidden rounded-full">
+                <img
+                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                  alt="Avatar 3"
+                />
+              </div>
+            </div>
+            <div className="avatar placeholder">
+              <div className="flex items-center justify-center w-6 h-6 text-xs rounded-full bg-neutral text-neutral-content">
+                <span>+99</span>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="flex-grow px-4 py-2 overflow-y-auto">

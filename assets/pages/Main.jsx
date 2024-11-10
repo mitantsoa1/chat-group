@@ -7,16 +7,19 @@ import Friend from "../components/Friend";
 import FriendRequest from "../components/FriendRequest";
 import Group from "../components/Groups";
 import ChatGroup from "../components/ChatGroup";
+import NotMembers from "../components/NotMembers";
 
 const Main = () => {
   const [isAdmin, setIsAdmin] = useState(true);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
-
+  const [notMembers, setNotMembers] = useState([]);
+  const [members, setMembers] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
+
   const [friends, setFriends] = useState([]);
 
-  const [randomNotFriends, setRandomNotFriends] = useState([]);
+  const [randomNotMembers, setRandomNotFriends] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
@@ -108,13 +111,6 @@ const Main = () => {
     const connectUser = async () => {
       try {
         const res = await axios.post("https://localhost:8000/api/user/connect");
-        // setFriends((prevFriends) =>
-        //   prevFriends.map((friend) =>
-        //     friend.id === data.userId
-        //       ? { ...friend, connected: data.connected }
-        //       : friend
-        //   )
-        // );
       } catch (error) {
         console.error("Error connecting user:", error);
       }
@@ -138,17 +134,31 @@ const Main = () => {
 
   const handleGroupClick = (group) => {
     setSelectedGroup(group);
+    const loadNotMember = async () => {
+      try {
+        const response = await axios.get(
+          `https://localhost:8000/api/groups/${group.id}`
+        );
+        console.log(response.data);
+
+        setNotMembers(response.data.notMembers);
+        setMembers(response.data.members);
+      } catch (error) {
+        console.error("Error loading messages:", error);
+      }
+    };
+
+    loadNotMember();
   };
 
-  const handleAddFriend = async (id) => {
+  const handleAddMember = async (group, id) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/friends/add/${id}`
+        `https://localhost:8000/api/groups/add/${group}/${id}`
       );
-      if (response.data.status === 200) {
-        setFriends((friends) => [...friends, response.data.friend]);
-        setRandomNotFriends((prevNotFriends) =>
-          prevNotFriends.filter((friend) => friend.id !== id)
+      if (response.status == 200) {
+        setNotMembers((prevMembers) =>
+          prevMembers.filter((member) => member.id !== id)
         );
       }
     } catch (error) {
@@ -156,38 +166,10 @@ const Main = () => {
     }
   };
 
-  // Fonction pour gérer les actions sur les demandes d'amis
-  const handlePendingFriendAction = async (pendingFriend, action) => {
-    try {
-      const response = await axios.post(
-        `https://localhost:8000/api/friends/${action}/${pendingFriend.id}`
-      );
-
-      if (response.data.status === 200) {
-        // Retirer l'utilisateur de la liste des demandes en attente
-        setPendingFriends((prevPending) =>
-          prevPending.filter((friend) => friend.id !== pendingFriend.id)
-        );
-
-        // Selon l'action, ajouter l'utilisateur à la liste appropriée
-        if (action === "accept") {
-          setFriends((prevFriends) => [...prevFriends, pendingFriend]);
-        } else if (action === "refuse" || action === "block") {
-          setRandomNotFriends((prevNotFriends) => [
-            ...prevNotFriends,
-            pendingFriend,
-          ]);
-        }
-      }
-    } catch (error) {
-      console.error(`Error handling friend request (${action}):`, error);
-    }
-  };
-
   return (
     <>
       <div className="w-full h-8 bg-gray-200">
-        <header className="fixed w-full h-8 p-1 mb-8 text-lg font-semibold bg-gray-300">
+        <header className="fixed z-10 w-full h-8 p-1 mb-8 text-lg font-semibold bg-gray-300">
           {isLoading ? (
             <></>
           ) : currentUser ? (
@@ -241,10 +223,11 @@ const Main = () => {
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
-              {randomNotFriends.length > 0 && (
-                <NotFriends
-                  randomNotFriends={randomNotFriends}
-                  handleAddFriend={handleAddFriend}
+              {notMembers.length > 0 && (
+                <NotMembers
+                  notMembers={notMembers}
+                  handleAddMember={handleAddMember}
+                  group={selectedGroup}
                 />
               )}
             </>

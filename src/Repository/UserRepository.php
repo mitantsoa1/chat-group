@@ -57,4 +57,8 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         return $this->findAll();
     }
+    public function findUsersNotInGroups(Groups $groups)
+    {
+        return $this->createQueryBuilder('u');
+    }
 }
