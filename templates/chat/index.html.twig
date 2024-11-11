@@ -9,7 +9,8 @@
 {% block javascripts %}
 	{{ parent() }}
 	<script>
-		window.MERCURE_PUBLIC_URL = '{{ mercure_public_url }}';
+		window.BASE_URL = '{{ BASE_URL }}';
+window.MERCURE_PUBLIC_URL = '{{ mercure_public_url }}';
 	</script>
 	{{ encore_entry_script_tags('app') }}
 {% endblock %}

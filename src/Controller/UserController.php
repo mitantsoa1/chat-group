@@ -13,7 +13,7 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 
-#[Route('/api', name: 'api.')]
+#[Route('/api/user', name: 'api.user.')]
 class UserController extends AbstractController
 {
     private $entityManager;
@@ -23,7 +23,7 @@ class UserController extends AbstractController
         $this->entityManager = $entityManager;
     }
 
-    #[Route('/user/current', name: 'user_current', methods: ['GET'])]
+    #[Route('/current', name: 'current', methods: ['GET'])]
     public function index(): Response
     {
         return $this->json(
@@ -34,7 +34,7 @@ class UserController extends AbstractController
         );
     }
 
-    #[Route('/user/connect', name: 'user_connect', methods: ['POST'])]
+    #[Route('/connect', name: 'connect', methods: ['POST'])]
     public function connect(HubInterface $hub): JsonResponse
     {
         $user = $this->getUser();
@@ -66,12 +66,13 @@ class UserController extends AbstractController
         return $this->json(['message' => 'Connected', 'connected' => true, 'friends' => $friends, "user" => $user], 200, [], ['groups' => 'user.read']);
     }
 
-    #[Route('/user/disconnect', name: 'user_disconnect', methods: ['POST'])]
+    #[Route('/disconnect', name: 'disconnect', methods: ['POST'])]
     public function disconnect(HubInterface $hub): JsonResponse
     {
         $user = $this->getUser();
         if (!$user) {
             return new JsonResponse(['message' => 'User not found'], Response::HTTP_NOT_FOUND);
+            // return $this->redirectToRoute('app_login');
         }
 
         if ($user instanceof User) {

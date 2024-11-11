@@ -24,6 +24,9 @@ class Groups
     #[ORM\Column(type: 'json', nullable: true)]
     private ?array $members = [];
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $photo = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -84,6 +87,18 @@ class Groups
                 $this->members = array_values($this->members); // Réindexe le tableau
             }
         }
+
+        return $this;
+    }
+
+    public function getPhoto(): ?string
+    {
+        return $this->photo;
+    }
+
+    public function setPhoto(?string $photo): static
+    {
+        $this->photo = $photo;
 
         return $this;
     }

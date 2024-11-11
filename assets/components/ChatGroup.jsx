@@ -2,8 +2,9 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
 import formatDate from "../_helpers";
+import MemberListProfilePicture from "./MemberListProfilePicture";
 
-function ChatGroup({ group, currentUser }) {
+function ChatGroup({ group, currentUser, members }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [notMembers, setNotMembers] = useState([]);
@@ -12,7 +13,12 @@ function ChatGroup({ group, currentUser }) {
   const [btnWriting, setBtnWriting] = useState("block");
   const messagesEndRef = useRef(null);
 
-  const BASE_URL = "https://localhost:8000";
+  const countMembers = members.length;
+
+  const groupPicturePath = `${BASE_URL}/uploads/groups/${
+    group.photo ?? "group_default_avatar.jpg"
+  }`;
+
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -126,40 +132,21 @@ function ChatGroup({ group, currentUser }) {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300">
+        <p className="p-0 my-0">
+          <img
+            src={groupPicturePath}
+            alt="image"
+            className="mr-2 rounded-full w-7 h-7 tooltip tooltip-bottom"
+          />
+        </p>
         {group ? group.name : "Sélectionner un groupe"}
-        {group && (
-          <div className="relative z-0 flex ml-2 -space-x-2 avatar-group rtl:space-x-reverse">
-            <div className="avatar">
-              <div className="w-6 h-6 overflow-hidden rounded-full">
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="Avatar 1"
-                />
-              </div>
-            </div>
-            <div className="avatar">
-              <div className="w-6 h-6 overflow-hidden rounded-full">
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="Avatar 2"
-                />
-              </div>
-            </div>
-            <div className="avatar">
-              <div className="w-6 h-6 overflow-hidden rounded-full">
-                <img
-                  src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                  alt="Avatar 3"
-                />
-              </div>
-            </div>
-            <div className="avatar placeholder">
-              <div className="flex items-center justify-center w-6 h-6 text-xs rounded-full bg-neutral text-neutral-content">
-                <span>+99</span>
-              </div>
-            </div>
-          </div>
-        )}
+
+        <MemberListProfilePicture
+          group={group}
+          members={members}
+          BASE_URL={BASE_URL}
+          currentUser={currentUser}
+        />
       </div>
 
       <div className="flex-grow px-4 py-2 overflow-y-auto">
@@ -168,7 +155,6 @@ function ChatGroup({ group, currentUser }) {
             const messageUserId =
               item.user.id !== undefined ? item.user.id : currentUser.id;
 
-            const profilePicturePath = `${BASE_URL}/uploads/profiles/${item.user.profilePicture}`;
             return (
               <li
                 key={item.message.id + "" + uuidv4()}
@@ -191,11 +177,11 @@ function ChatGroup({ group, currentUser }) {
                     }`}
                   >
                     <small className="text-[10px] text-gray-500 mb-1 flex flex-row">
-                      <img
+                      {/* <img
                         src={profilePicturePath}
                         alt="image"
-                        className="mr-2 rounded-full w-7 h-7"
-                      />
+                        className="mr-2 rounded-full w-7 h-7 tooltip tooltip-bottom"
+                      /> */}
                       <span className="flex items-center">
                         {item.user.username}
                       </span>

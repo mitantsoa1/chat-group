@@ -13,6 +13,7 @@ class DefaultController extends AbstractController
     {
         return $this->render('chat/index.html.twig', [
             'mercure_public_url' => $this->getParameter('mercure_public_url'),
+            'BASE_URL' => $this->getParameter('BASE_URL'),
         ]);
     }
 }

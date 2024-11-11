@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Chat from "../components/Chat";
-import NotFriends from "../components/NotFriends";
 import Input from "../components/Input";
-import Friend from "../components/Friend";
-import FriendRequest from "../components/FriendRequest";
 import Group from "../components/Groups";
 import ChatGroup from "../components/ChatGroup";
 import NotMembers from "../components/NotMembers";
@@ -33,9 +29,13 @@ const Main = () => {
         const response = await axios.get(
           `https://localhost:8000/api/user/current`
         );
-        setCurrentUser(response.data);
-        const roles = response.data.roles;
-        // setIsAdmin(roles.includes("ROLE_ADMIN"));
+        if (response.data) {
+          setCurrentUser(response.data);
+          const roles = response.data.roles;
+          // setIsAdmin(roles.includes("ROLE_ADMIN"));
+        } else {
+          window.location("/login");
+        }
       } catch (error) {
         console.error("Error loading current user:", error);
       }
@@ -139,7 +139,6 @@ const Main = () => {
         const response = await axios.get(
           `https://localhost:8000/api/groups/${group.id}`
         );
-        console.log(response.data);
 
         setNotMembers(response.data.notMembers);
         setMembers(response.data.members);
@@ -169,7 +168,7 @@ const Main = () => {
   return (
     <>
       <div className="w-full h-8 bg-gray-200">
-        <header className="fixed z-10 w-full h-8 p-1 mb-8 text-lg font-semibold bg-gray-300">
+        <header className="fixed z-50 w-full h-8 p-1 mb-0 text-lg font-semibold bg-gray-300">
           {isLoading ? (
             <></>
           ) : currentUser ? (
@@ -203,7 +202,11 @@ const Main = () => {
           }`}
         >
           {selectedGroup && (
-            <ChatGroup group={selectedGroup} currentUser={currentUser} />
+            <ChatGroup
+              group={selectedGroup}
+              currentUser={currentUser}
+              members={members}
+            />
           )}
         </div>
 
