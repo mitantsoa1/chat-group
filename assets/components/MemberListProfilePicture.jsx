@@ -13,6 +13,9 @@ const MemberListProfilePicture = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isModalListOpen, setIsModalListOpen] = useState(false);
   const countMembers = members.length;
+  const groupPicturePath = `${BASE_URL}/uploads/groups/${
+    group.photo ?? "group_default_avatar.jpg"
+  }`;
 
   const handleShowMemberProfile = (member) => (event) => {
     event.preventDefault();
@@ -89,24 +92,36 @@ const MemberListProfilePicture = ({
 
   return (
     <>
-      <div className="relative z-0 flex ml-2 -space-x-2 avatar-group rtl:space-x-reverse">
-        {renderMembers()}
-        {countMembers > 3 && (
-          <div
-            className="tooltip tooltip-bottom"
-            data-tip={`${countMembers - 2} more members`}
-          >
+      <>
+        <p className="p-0 my-0">
+          <img
+            src={groupPicturePath}
+            alt="image"
+            className="mr-2 rounded-full cursor-pointer w-7 h-7 tooltip tooltip-bottom"
+            onClick={handleShowMembersList(group)}
+          />
+        </p>
+        {group ? group.name : "Sélectionner un groupe"}
+
+        <div className="relative z-0 flex ml-2 -space-x-2 avatar-group rtl:space-x-reverse">
+          {renderMembers()}
+          {countMembers > 3 && (
             <div
-              className="avatar placeholder "
-              onClick={handleShowMembersList(group)}
+              className="tooltip tooltip-bottom"
+              data-tip={`${countMembers - 2} more members`}
             >
-              <div className="flex items-center justify-center w-6 h-6 text-xs rounded-full cursor-pointer bg-neutral text-neutral-content">
-                <span>+{countMembers - 2}</span>
+              <div
+                className="avatar placeholder "
+                onClick={handleShowMembersList(group)}
+              >
+                <div className="flex items-center justify-center w-6 h-6 text-xs rounded-full cursor-pointer bg-neutral text-neutral-content">
+                  <span>+{countMembers - 2}</span>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </>
 
       {selectedMember && (
         <ModalProfile

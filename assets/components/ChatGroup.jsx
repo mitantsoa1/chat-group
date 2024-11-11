@@ -15,10 +15,6 @@ function ChatGroup({ group, currentUser, members }) {
 
   const countMembers = members.length;
 
-  const groupPicturePath = `${BASE_URL}/uploads/groups/${
-    group.photo ?? "group_default_avatar.jpg"
-  }`;
-
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -132,15 +128,6 @@ function ChatGroup({ group, currentUser, members }) {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300">
-        <p className="p-0 my-0">
-          <img
-            src={groupPicturePath}
-            alt="image"
-            className="mr-2 rounded-full w-7 h-7 tooltip tooltip-bottom"
-          />
-        </p>
-        {group ? group.name : "Sélectionner un groupe"}
-
         <MemberListProfilePicture
           group={group}
           members={members}
