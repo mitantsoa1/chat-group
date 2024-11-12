@@ -4,6 +4,7 @@ import Input from "../components/Input";
 import Group from "../components/Groups";
 import ChatGroup from "../components/ChatGroup";
 import NotMembers from "../components/NotMembers";
+import ModalAddGroup from "../components/ModalAddGroup";
 
 const Main = () => {
   const [isAdmin, setIsAdmin] = useState(true);
@@ -194,6 +195,17 @@ const Main = () => {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <div className="w-full my-3">
+            <button
+              className="w-full h-8 text-3xl text-white bg-blue-700"
+              onClick={() =>
+                document.getElementById("modal_add_group").showModal()
+              }
+            >
+              +
+            </button>
+          </div>
+          <ModalAddGroup />
           <Group groups={groups} handleGroupClick={handleGroupClick} />
         </div>
         <div

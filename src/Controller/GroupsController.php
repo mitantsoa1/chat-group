@@ -7,6 +7,8 @@ use App\Repository\GroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -44,5 +46,39 @@ class GroupsController extends AbstractController
         }
 
         return $this->json("Fatal Error");
+    }
+
+    #[Route('/create', name: 'create.group', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        try {
+            $data = json_decode($request->getContent(), true);
+
+            if (!isset($data['nameGroup']) || empty($data['nameGroup'])) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Group name is required'
+                ], 400);
+            }
+
+            $group = new Groups();
+            $group->setName($data['nameGroup']);
+            $group->setDescription($data['descriptionGroup'] ?? null);
+            $group->setMembers([]);
+
+            $entityManager->persist($group);
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Group created successfully',
+                'group' => $group
+            ]);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'An error occurred while creating the group'
+            ], 500);
+        }
     }
 }

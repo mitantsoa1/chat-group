@@ -43,6 +43,8 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/api$, roles: PUBLIC_ACCESS }
+        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/register, roles: PUBLIC_ACCESS }
         - { path: ^/api/chat/messages, roles: PUBLIC_ACCESS }
         - { path: ^/api/chat/friends, roles: PUBLIC_ACCESS }
         - { path: ^/api/chat/send, roles: PUBLIC_ACCESS }
