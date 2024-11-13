@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import ModalProfile from "./ModalProfile";
 import MembersList from "./MembersList";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
 const MemberListProfilePicture = ({
   group,
@@ -17,6 +19,23 @@ const MemberListProfilePicture = ({
     group.photo ?? "group_default_avatar.jpg"
   }`;
 
+  const handleDeleteGroup = () => {
+    const MySwal = withReactContent(Swal);
+    MySwal.fire({
+      title: "Do you want to save the changes?",
+      showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: "Save",
+      denyButtonText: `Don't save`,
+    }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        Swal.fire("Saved!", "", "success");
+      } else if (result.isDenied) {
+        Swal.fire("Changes are not saved", "", "info");
+      }
+    });
+  };
   const handleShowMemberProfile = (member) => (event) => {
     event.preventDefault();
     setSelectedMember(member);
@@ -122,6 +141,31 @@ const MemberListProfilePicture = ({
           )}
         </div>
       </>
+      <div className="dropdown dropdown-end">
+        <label tabIndex={0} className="btn btn-ghost btn-circle btn-sm">
+          <img
+            src={`${BASE_URL}/images/dots.png`}
+            alt="Menu"
+            className="w-5 h-5"
+          />
+        </label>
+        <ul
+          tabIndex={0}
+          className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52"
+        >
+          <li>
+            <a>Group Settings</a>
+          </li>
+          <li>
+            <a>Manage Members</a>
+          </li>
+          <li>
+            <a className="text-error" onClick={handleDeleteGroup}>
+              Delete Group
+            </a>
+          </li>
+        </ul>
+      </div>
 
       {selectedMember && (
         <ModalProfile
@@ -142,6 +186,9 @@ const MemberListProfilePicture = ({
           currentUser={currentUser}
         />
       )}
+      {/* <div>
+        <img src={`${BASE_URL}/images/dots.png`} alt="" className="h-6" />
+      </div> */}
     </>
   );
 };
