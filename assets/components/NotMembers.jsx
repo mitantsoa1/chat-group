@@ -1,4 +1,4 @@
-function NotMembers({ notMembers, handleAddMember, group }) {
+function NotMembers({ notMembers, handleAddMember, group, setMembers }) {
   return (
     <>
       <div className="flex flex-col space-y-2">

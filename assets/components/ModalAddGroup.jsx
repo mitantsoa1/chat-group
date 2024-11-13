@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 
-const ModalAddGroup = () => {
-  const [formData, setFormData] = useState([]);
+const ModalAddGroup = ({ setGroups }) => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+
+  const initialFormState = {
+    nameGroup: "",
+    descriptionGroup: "",
+  };
+  const [formData, setFormData] = useState(initialFormState);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,12 +21,21 @@ const ModalAddGroup = () => {
   useEffect(() => {
     const modalElement = document.getElementById("modal_add_group");
     if (isOpen && modalElement) {
+      setFormData({
+        nameGroup: "",
+        descriptionGroup: "",
+      });
       modalElement.showModal();
     }
   }, [isOpen]);
 
   const handleCloseModal = () => {
     setIsOpen(false);
+  };
+
+  const resetForm = () => {
+    setFormData(initialFormState);
+    setErrorMessage(null);
   };
 
   const handleSubmit = async (e) => {
@@ -43,13 +57,17 @@ const ModalAddGroup = () => {
       const result = await response.json();
 
       if (result.success) {
+        setFormData({
+          nameGroup: "",
+          descriptionGroup: "",
+        });
+        resetForm();
+        setGroups((prevGroups) => [...prevGroups, result.group]);
         const modal = document.getElementById("modal_add_group");
         if (modal) {
           modal.close();
           handleCloseModal();
         }
-
-        console.log(result);
 
         // You can add a success notification here
       } else {
@@ -64,7 +82,7 @@ const ModalAddGroup = () => {
   return (
     <dialog
       id="modal_add_group"
-      className="flex items-center justify-center w-8/12 max-w-5xl modal-box"
+      className="flex items-center justify-center modal"
     >
       <div className=" modal-box">
         <h3 className="text-lg font-bold">Add Group</h3>
@@ -87,6 +105,7 @@ const ModalAddGroup = () => {
                   className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Name"
                   onChange={handleChange}
+                  value={formData.nameGroup}
                 />
               </div>
               <div>
@@ -100,6 +119,7 @@ const ModalAddGroup = () => {
                   className="relative block w-full px-3 py-2 text-gray-900 placeholder-gray-500 border border-gray-300 rounded-none appearance-none rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Description"
                   onChange={handleChange}
+                  value={formData.descriptionGroup}
                 />
               </div>
             </div>

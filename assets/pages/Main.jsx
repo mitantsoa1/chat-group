@@ -14,14 +14,9 @@ const Main = () => {
   const [members, setMembers] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
 
-  const [friends, setFriends] = useState([]);
-
-  const [randomNotMembers, setRandomNotFriends] = useState([]);
   const [currentUser, setCurrentUser] = useState(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [pendingFriends, setPendingFriends] = useState([]);
-  const [notFriends, setNotFriends] = useState([]);
 
   // Chargement de l'utilisateur actuel
   useEffect(() => {
@@ -75,13 +70,13 @@ const Main = () => {
           const data = JSON.parse(event.data);
           console.log("data ??????", data);
 
-          setFriends((prevFriends) =>
-            prevFriends.map((friend) =>
-              friend.id === data.userId
-                ? { ...friend, connected: data.connected }
-                : friend
-            )
-          );
+          // setFriends((prevFriends) =>
+          //   prevFriends.map((friend) =>
+          //     friend.id === data.userId
+          //       ? { ...friend, connected: data.connected }
+          //       : friend
+          //   )
+          // );
 
           // Mise à jour de l'ami sélectionné si nécessaire
           if (selectedFriend && selectedFriend.id === data.userId) {
@@ -156,10 +151,12 @@ const Main = () => {
       const response = await axios.post(
         `https://localhost:8000/api/groups/add/${group}/${id}`
       );
+
       if (response.status == 200) {
         setNotMembers((prevMembers) =>
           prevMembers.filter((member) => member.id !== id)
         );
+        setMembers((prevMembers) => [...prevMembers, response.data.member]);
       }
     } catch (error) {
       console.error("Error connecting user:", error);
@@ -205,8 +202,12 @@ const Main = () => {
               +
             </button>
           </div>
-          <ModalAddGroup />
-          <Group groups={groups} handleGroupClick={handleGroupClick} />
+
+          <Group
+            groups={groups}
+            handleGroupClick={handleGroupClick}
+            setGroups={setGroups}
+          />
         </div>
         <div
           className={`flex flex-col overflow-x-hidden bg-white shadow-lg ${
@@ -242,6 +243,7 @@ const Main = () => {
                   notMembers={notMembers}
                   handleAddMember={handleAddMember}
                   group={selectedGroup}
+                  setMembers={setMembers}
                 />
               )}
             </>

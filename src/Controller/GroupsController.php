@@ -42,7 +42,7 @@ class GroupsController extends AbstractController
             $groupToAdded->addMember($id);
             $entityManager->persist($groupToAdded);
             $entityManager->flush();
-            return $this->json($groupToAdded, Response::HTTP_OK);
+            return $this->json(["group" => $groupToAdded, "member" => $userToAdded], Response::HTTP_OK);
         }
 
         return $this->json("Fatal Error");
@@ -64,7 +64,7 @@ class GroupsController extends AbstractController
             $group = new Groups();
             $group->setName($data['nameGroup']);
             $group->setDescription($data['descriptionGroup'] ?? null);
-            $group->setMembers([]);
+            $group->setMembers([1]);
 
             $entityManager->persist($group);
             $entityManager->flush();
