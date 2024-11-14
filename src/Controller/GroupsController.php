@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/api/groups', name: 'api.groups.')]
-class GroupsController extends AbstractController
+class GroupsController extends BaseController
 {
     #[Route('/', name: 'index')]
     public function index(GroupsRepository $groupsRepository): Response
@@ -52,9 +52,15 @@ class GroupsController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         try {
-            $data = json_decode($request->getContent(), true);
+            // $data = json_decode($request->getContent(), true);
+            $nameGroup = $request->request->get('nameGroup');
+            $descriptionGroup = $request->request->get('descriptionGroup');
 
-            if (!isset($data['nameGroup']) || empty($data['nameGroup'])) {
+            // dd($nameGroup);
+            // Récupérer le fichier
+            $photoFile = $request->files->get('photoGroup');
+
+            if (!$nameGroup) {
                 return new JsonResponse([
                     'success' => false,
                     'message' => 'Group name is required'
@@ -62,9 +68,15 @@ class GroupsController extends AbstractController
             }
 
             $group = new Groups();
-            $group->setName($data['nameGroup']);
-            $group->setDescription($data['descriptionGroup'] ?? null);
+            $group->setName($nameGroup);
+            $group->setDescription($descriptionGroup ?? null);
+
             $group->setMembers([1]);
+
+            if ($photoFile) {
+                $uploadData = $this->uploadFile($photoFile, 'profile_photos_group_directory', '/uploads/groups');
+                $group->setPhoto($uploadData['filename']);
+            }
 
             $entityManager->persist($group);
             $entityManager->flush();
@@ -73,6 +85,36 @@ class GroupsController extends AbstractController
                 'success' => true,
                 'message' => 'Group created successfully',
                 'group' => $group
+            ], Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return new JsonResponse([
+                'success' => false,
+                'message' => 'An error occurred while creating the group'
+            ], 500);
+        }
+    }
+    #[Route('/delete/{id}', name: 'delete.group', methods: ['POST'])]
+    public function delete(EntityManagerInterface $entityManager, int $id, GroupsRepository $groupsRepository): JsonResponse
+    {
+        try {
+
+            $group = $groupsRepository->findOneBy(["id" => $id]);
+            if (!$group) {
+                return new JsonResponse([
+                    'success' => false,
+                    'message' => 'Group not found'
+                ], 400);
+            }
+
+            $defaultGroup = $groupsRepository->findOneBy([], ['id' => 'ASC']);
+
+            $entityManager->remove($group);
+            $entityManager->flush();
+
+            return $this->json([
+                'success' => true,
+                'message' => 'Group created successfully',
+                'group' => $defaultGroup
             ]);
         } catch (\Exception $e) {
             return new JsonResponse([

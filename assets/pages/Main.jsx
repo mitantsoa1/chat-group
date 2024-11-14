@@ -219,6 +219,7 @@ const Main = () => {
               group={selectedGroup}
               currentUser={currentUser}
               members={members}
+              setGroups={setGroups}
             />
           )}
         </div>

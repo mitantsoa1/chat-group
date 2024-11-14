@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import formatDate from "../_helpers";
 import MemberListProfilePicture from "./MemberListProfilePicture";
 
-function ChatGroup({ group, currentUser, members }) {
+function ChatGroup({ group, currentUser, members, setGroups }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [notMembers, setNotMembers] = useState([]);
@@ -133,6 +133,7 @@ function ChatGroup({ group, currentUser, members }) {
           members={members}
           BASE_URL={BASE_URL}
           currentUser={currentUser}
+          setGroups={setGroups}
         />
       </div>
 
