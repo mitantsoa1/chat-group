@@ -2,6 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import Main from "./pages/Main";
 import "./styles/app.css";
+import { AdminContextProvider } from "./context/useAdmin";
 
 // Nous allons définir l'URL de Mercure dans une variable globale
 window.MERCURE_PUBLIC_URL =
@@ -13,6 +14,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const rootElement = document.getElementById("root");
   if (rootElement) {
     const root = createRoot(rootElement);
-    root.render(<Main />);
+    root.render(
+      <AdminContextProvider>
+        <Main />
+      </AdminContextProvider>
+    );
   }
 });

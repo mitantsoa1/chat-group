@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Input from "../components/Input";
 import Group from "../components/Groups";
 import ChatGroup from "../components/ChatGroup";
 import NotMembers from "../components/NotMembers";
 import ModalAddGroup from "../components/ModalAddGroup";
+import { AdminContext } from "../context/useAdmin";
 
 const Main = () => {
-  const [isAdmin, setIsAdmin] = useState(true);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [notMembers, setNotMembers] = useState([]);
@@ -17,6 +17,8 @@ const Main = () => {
   const [currentUser, setCurrentUser] = useState(null);
   const [search, setSearch] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+
+  const { isAdmin, toggleAdmin } = useContext(AdminContext);
 
   // Chargement de l'utilisateur actuel
   useEffect(() => {
@@ -28,6 +30,9 @@ const Main = () => {
         if (response.data) {
           setCurrentUser(response.data);
           const roles = response.data.roles;
+          if (roles.includes("ROLE_ADMIN")) {
+            toggleAdmin();
+          }
           // setIsAdmin(roles.includes("ROLE_ADMIN"));
         } else {
           window.location("/login");

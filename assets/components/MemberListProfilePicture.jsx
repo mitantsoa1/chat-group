@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ModalProfile from "./ModalProfile";
 import MembersList from "./MembersList";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import axios from "axios";
+import { AdminContext } from "../context/useAdmin";
 
 const MemberListProfilePicture = ({
   group,
@@ -141,7 +142,7 @@ const MemberListProfilePicture = ({
     const result = await MySwal.fire({
       title: "Do you want to delete the group?",
       text: "This action cannot be undone.",
-      icon: "warning",
+      icon: "question",
       showCancelButton: true,
       confirmButtonColor: "#d33",
       cancelButtonColor: "#3085d6",
@@ -160,6 +161,7 @@ const MemberListProfilePicture = ({
     }
   };
 
+  const { isAdmin } = useContext(AdminContext);
   return (
     <>
       <div className="flex items-center min-w-52 w-52">
@@ -195,31 +197,33 @@ const MemberListProfilePicture = ({
             )}
           </div>
 
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-ghost btn-circle btn-sm">
-              <img
-                src={`${BASE_URL}/images/dots.png`}
-                alt="Menu"
-                className="w-5 h-5"
-              />
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content z-[100] menu p-2 shadow-lg bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <a>Group Settings</a>
-              </li>
-              <li>
-                <a>Manage Members</a>
-              </li>
-              <li>
-                <a className="text-error" onClick={handleDeleteGroup}>
-                  Delete Group
-                </a>
-              </li>
-            </ul>
-          </div>
+          {isAdmin && (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-circle btn-sm">
+                <img
+                  src={`${BASE_URL}/images/dots.png`}
+                  alt="Menu"
+                  className="w-5 h-5"
+                />
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[100] menu p-2 shadow-lg bg-base-100 rounded-box w-52"
+              >
+                <li>
+                  <a>Group Settings</a>
+                </li>
+                <li>
+                  <a>Manage Members</a>
+                </li>
+                <li>
+                  <a className="text-error" onClick={handleDeleteGroup}>
+                    Delete Group
+                  </a>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
 
