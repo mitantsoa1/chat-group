@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useContext } from "react";
+import { AdminContext } from "../context/useAdmin";
 
 const List = ({ member, BASE_URL, handleShowMemberProfile }) => {
   const memberPhotoPath = `${BASE_URL}/uploads/profiles/${
@@ -8,6 +9,8 @@ const List = ({ member, BASE_URL, handleShowMemberProfile }) => {
   const getStatusColor = () => {
     return member.isConnected ? "bg-success" : "bg-gray-400";
   };
+
+  const { isAdmin } = useContext(AdminContext);
 
   return (
     <li
@@ -56,6 +59,7 @@ const List = ({ member, BASE_URL, handleShowMemberProfile }) => {
         </div>
 
         {/* Action Buttons */}
+
         <div className="flex items-center gap-2 transition-opacity opacity-0 group-hover:opacity-100">
           <button
             className="btn btn-ghost btn-sm tooltip tooltip-left"
@@ -82,37 +86,39 @@ const List = ({ member, BASE_URL, handleShowMemberProfile }) => {
               />
             </svg>
           </button>
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-ghost btn-sm">
-              <svg
-                className="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+          {isAdmin && (
+            <div className="dropdown dropdown-end">
+              <label tabIndex={0} className="btn btn-ghost btn-sm">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                  />
+                </svg>
+              </label>
+              <ul
+                tabIndex={0}
+                className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                />
-              </svg>
-            </label>
-            <ul
-              tabIndex={0}
-              className="dropdown-content z-[1] menu p-2 shadow-lg bg-base-100 rounded-box w-52"
-            >
-              <li>
-                <a>Add to Group</a>
-              </li>
-              <li>
-                <a>Block User</a>
-              </li>
-              <li>
-                <a className="text-error">Report</a>
-              </li>
-            </ul>
-          </div>
+                <li>
+                  <a>Add to Group</a>
+                </li>
+                <li>
+                  <a>Block User</a>
+                </li>
+                <li>
+                  <a className="text-error">Report</a>
+                </li>
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     </li>

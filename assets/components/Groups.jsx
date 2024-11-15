@@ -1,13 +1,20 @@
-import React from "react";
+import React, { useContext } from "react";
 import ModalAddGroup from "./ModalAddGroup";
+import { AdminContext } from "../context/useAdmin";
 
 function Group({ groups, handleGroupClick, setGroups }) {
-  const BASE_URL = "http://localhost:8000";
+  const BASE_URL = "https://localhost:8000";
+
+  const { isAdmin } = useContext(AdminContext);
 
   return (
     <>
       <ModalAddGroup setGroups={setGroups} />
-      <div className="flex flex-col space-y-2 overflow-y-auto h-1/3">
+      <div
+        className={`flex flex-col w-full ${
+          isAdmin ? "mt-3" : "mt-10"
+        }  space-y-2 overflow-y-auto h-1/3`}
+      >
         {groups.map((group) => (
           <div
             key={group.id}

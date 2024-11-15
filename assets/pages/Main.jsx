@@ -171,43 +171,35 @@ const Main = () => {
   return (
     <>
       <div className="w-full h-8 bg-gray-200">
-        <header className="fixed z-50 w-full h-8 p-1 mb-0 text-lg font-semibold bg-gray-300">
+        <header className="fixed z-50 flex flex-col w-full h-8 p-0 mb-0 text-lg font-semibold bg-gray-300">
           {isLoading ? (
             <></>
           ) : currentUser ? (
             <div className="flex items-center space-x-2">
-              <div>{currentUser.photoProfile ?? ""}</div>
+              <div>{currentUser.username ?? ""}</div>
             </div>
           ) : (
             <p>Erreur de chargement de l'utilisateur</p>
           )}
         </header>
       </div>
-      <div className="flex w-full h-screen overflow-hidden">
-        <div className="w-1/6 bg-gray-300">
-          <header className="h-8 p-1 text-lg font-semibold text-white bg-primary">
+      <div className="flex w-full h-full gap-0">
+        <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300">
+          <p className="fixed p-1 pt-[10px] w-1/6 bg-primary text-white font-semibold text-sm justify-center h-8">
             Vos groupes
-          </header>
-          <div className="my-3">
-            <Input
-              type="text"
-              className="flex-grow w-full p-2 bg-white border-2 rounded-lg outline-none"
-              placeholder="Rechercher un ami"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <div className="w-full my-3">
-            <button
-              className="w-full h-8 text-3xl text-white bg-blue-700"
-              onClick={() =>
-                document.getElementById("modal_add_group").showModal()
-              }
-            >
-              +
-            </button>
-          </div>
-
+          </p>
+          {isAdmin && (
+            <div className="w-full mt-10 mb-4">
+              <button
+                className="w-full h-8 text-3xl text-white bg-blue-700"
+                onClick={() =>
+                  document.getElementById("modal_add_group").showModal()
+                }
+              >
+                +
+              </button>
+            </div>
+          )}
           <Group
             groups={groups}
             handleGroupClick={handleGroupClick}
@@ -215,9 +207,7 @@ const Main = () => {
           />
         </div>
         <div
-          className={`flex flex-col overflow-x-hidden bg-white shadow-lg ${
-            isAdmin ? "w-4/6" : "w-full"
-          }`}
+          className={`grow flex flex-col overflow-x-hidden bg-white shadow-lg `}
         >
           {selectedGroup && (
             <ChatGroup
@@ -228,33 +218,30 @@ const Main = () => {
             />
           )}
         </div>
-
-        <div className="flex flex-col w-1/6 bg-gray-300">
-          {isAdmin && selectedGroup && (
-            <>
-              <p className="p-1 pt-[10px] w-full bg-primary text-white font-semibold text-sm justify-center h-8">
-                Pas encore membre de {selectedGroup.name}
-              </p>
-              <div className="my-3">
-                <Input
-                  type="text"
-                  className="flex-grow w-full p-2 bg-white border-2 rounded-lg outline-none"
-                  placeholder="Rechercher "
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-              {notMembers.length > 0 && (
-                <NotMembers
-                  notMembers={notMembers}
-                  handleAddMember={handleAddMember}
-                  group={selectedGroup}
-                  setMembers={setMembers}
-                />
-              )}
-            </>
-          )}
-        </div>
+        {isAdmin && selectedGroup && (
+          <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300">
+            <p className="fixed p-1 pt-[10px] w-full bg-primary text-white font-semibold text-sm justify-center h-8">
+              Pas encore membre de {selectedGroup.name}
+            </p>
+            <div className="my-3">
+              <Input
+                type="text"
+                className="flex-grow w-full p-2 bg-white border-2 rounded-lg outline-none"
+                placeholder="Rechercher "
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+            </div>
+            {notMembers.length > 0 && (
+              <NotMembers
+                notMembers={notMembers}
+                handleAddMember={handleAddMember}
+                group={selectedGroup}
+                setMembers={setMembers}
+              />
+            )}
+          </div>
+        )}
       </div>
     </>
   );

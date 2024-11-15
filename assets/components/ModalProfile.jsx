@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import formatDate from "../_helpers";
+import { returnDate } from "../_helpers";
 
 const ModalProfile = ({ member, BASE_URL, isOpen, onClose, currentUser }) => {
   const profilePicturePath = `${BASE_URL}/uploads/profiles/${
@@ -55,7 +56,7 @@ const ModalProfile = ({ member, BASE_URL, isOpen, onClose, currentUser }) => {
               {member.email}
             </span>
             <p className="text-sm text-base-content/70">
-              Membre depuis {formatDate(member.createdAt)}
+              Date d'entrée: {returnDate(member.createdAt)}
             </p>
           </div>
 
