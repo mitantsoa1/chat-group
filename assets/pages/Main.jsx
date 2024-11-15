@@ -223,15 +223,6 @@ const Main = () => {
             <p className="fixed p-1 pt-[10px] w-full bg-primary text-white font-semibold text-sm justify-center h-8">
               Pas encore membre de {selectedGroup.name}
             </p>
-            <div className="my-3">
-              <Input
-                type="text"
-                className="flex-grow w-full p-2 bg-white border-2 rounded-lg outline-none"
-                placeholder="Rechercher "
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
             {notMembers.length > 0 && (
               <NotMembers
                 notMembers={notMembers}

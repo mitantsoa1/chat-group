@@ -1,7 +1,7 @@
 function NotMembers({ notMembers, handleAddMember, group, setMembers }) {
   return (
     <>
-      <div className="flex flex-col space-y-2">
+      <div className="flex flex-col mt-10 space-y-2">
         {notMembers.map((notMember) => (
           <div
             key={notMember.id}
