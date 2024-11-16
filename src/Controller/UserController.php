@@ -98,4 +98,13 @@ class UserController extends AbstractController
 
         return new JsonResponse(['message' => 'Disconnected', 'connected' => false]);
     }
+
+    #[Route('/show/{id}', name: 'show', methods: ['GET'])]
+    public function show(User $user): Response
+    {
+        return $this->json(
+            $user,
+            200,
+        );
+    }
 }

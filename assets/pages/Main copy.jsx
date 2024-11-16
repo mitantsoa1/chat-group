@@ -126,7 +126,6 @@ const Main = () => {
   };
 
   const handleAddFriend = async (id) => {
-    console.log("id_not_friend", id);
     try {
       const response = await axios.post(
         `https://localhost:8000/api/friends/add/${id}`
@@ -140,7 +139,6 @@ const Main = () => {
           prevNotFriends.filter((friend) => friend.id !== id)
         );
       }
-      console.log(response.data);
     } catch (error) {
       console.error("Error connecting user:", error);
     }

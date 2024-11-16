@@ -66,7 +66,6 @@ const Main = () => {
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("data ??????", data);
 
           setFriends((prevFriends) =>
             prevFriends.map((friend) =>

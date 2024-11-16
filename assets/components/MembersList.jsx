@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import List from "./List";
 import ModalProfile from "./ModalProfile";
+import axios from "axios";
 
 const MembersList = ({
   group,
+  setMembers,
   members,
   BASE_URL,
   isOpen,
@@ -36,8 +38,24 @@ const MembersList = ({
     onClose();
   };
 
-  const handleShowMemberProfile = (member) => (event) => {
+  const handleShowMemberProfile = (member) => async (event) => {
     event.preventDefault();
+
+    try {
+      const response = await axios.get(
+        `https://localhost:8000/api/user/show/${member.id}`
+      );
+      if (response.status === 200) {
+        setMembers((prevMembers) =>
+          prevMembers.map((member) =>
+            member.id === data.id ? { ...member, ...data } : member
+          )
+        );
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Error connecting user:", error);
+    }
 
     setSelectedMember(member);
     setIsModalOpen(true);

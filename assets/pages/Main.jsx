@@ -73,13 +73,13 @@ const Main = () => {
       eventSource.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          console.log("data ??????", data);
 
-          // setFriends((prevFriends) =>
-          //   prevFriends.map((friend) =>
-          //     friend.id === data.userId
-          //       ? { ...friend, connected: data.connected }
-          //       : friend
+          /** Pour mettre à jour le statut d'un utilisateur dès qu'il se connecte */
+          // setMembers((prevMembers) =>
+          //   prevMembers.map((member) =>
+          //     member.id === data.userId
+          //       ? { ...member, isConnected: data.connected }
+          //       : member
           //   )
           // );
 

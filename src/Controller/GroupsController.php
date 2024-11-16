@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Groups;
+use App\Entity\User;
 use App\Repository\GroupsRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;

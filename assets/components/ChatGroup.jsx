@@ -103,8 +103,6 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
         }
       );
 
-      console.log("resp", response);
-
       const newMessageObject = response.data;
       if (newMessageObject.user_id === undefined) {
         newMessageObject.user_id = currentUser.id;
@@ -196,7 +194,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
                     >
                       {item.message.body}
 
-                      <small className="relative block text-[8px] opacity-70 mt-1 text-right z-0">
+                      <small className="relative block text-[8px] opacity-70 mt-1 text-right z-10">
                         {formatDate(item.message.created_at)}
                       </small>
                     </div>
