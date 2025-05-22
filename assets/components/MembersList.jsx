@@ -43,7 +43,7 @@ const MembersList = ({
 
     try {
       const response = await axios.get(
-        `https://localhost:8000/api/user/show/${member.id}`
+        `http://localhost:8000/api/user/show/${member.id}`
       );
       if (response.status === 200) {
         setMembers((prevMembers) =>

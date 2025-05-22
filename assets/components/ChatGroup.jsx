@@ -13,6 +13,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
   const [writing, setWriting] = useState("hidden");
   const [btnWriting, setBtnWriting] = useState("block");
   const messagesEndRef = useRef(null);
+  const formRef = useRef(null);
 
   const countMembers = members.length;
 
@@ -43,7 +44,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
     const loadMessages = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8000/api/chat/messages/${group.id}`
+          `http://localhost:8000/api/chat/messages/${group.id}`
         );
         if (Array.isArray(response.data)) {
           setMessages(response.data);
@@ -96,7 +97,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
 
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/chat/send/${group.id}`,
+        `http://localhost:8000/api/chat/send/${group.id}`,
         {
           message: newMessage,
           recipients: group.id,
@@ -126,6 +127,9 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
   const handleWriting = () => {
     setWriting("block");
     setBtnWriting("hidden");
+    setTimeout(() => {
+      formRef.current?.scrollIntoView({ behavior: "smooth", block: "end" });
+    }, 100);
   };
 
   const { isAdmin } = useContext(AdminContext);
@@ -133,8 +137,8 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
   return (
     <div className="flex flex-col h-full">
       <div
-        className={`fixed flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300 ${
-          isAdmin ? "w-full" : "w-5/6"
+        className={`sticky top-0 flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300 ${
+          isAdmin ? "w-2/6" : "w-2/6"
         } `}
       >
         <MemberListProfilePicture
@@ -146,7 +150,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
         />
       </div>
 
-      <div className="flex-grow px-4 py-10 overflow-y-auto">
+      <div className="flex-grow px-4">
         <ul className="space-y-4">
           {messages.map((item) => {
             const messageUserId =
@@ -189,7 +193,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
                         textAlign: "justify",
                         textJustify: "inter-word",
                         wordWrap: "break-word",
-                        whiteSpace: "normal",
+                        whiteSpace: "pre-line",
                       }}
                     >
                       {item.message.body}
@@ -204,34 +208,34 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
             );
           })}
         </ul>
+        <form
+          ref={formRef}
+          onSubmit={handleSubmit}
+          className={`relative ${writing} writing-area`}
+        >
+          <div className="flex items-center p-4 bg-gray-100 border-t border-gray-300">
+            <textarea
+              className="flex-grow p-2 mr-4 text-sm bg-white border rounded-lg outline-none"
+              placeholder="Écrire un message..."
+              value={newMessage}
+              onChange={(e) => setNewMessage(e.target.value)}
+            />
+            <button className="px-4 py-2 text-white rounded-lg shadow-lg cursor-pointer bg-primary">
+              Envoyer
+            </button>
+          </div>
+        </form>
         <div ref={messagesEndRef} />
       </div>
 
-      <div className="sticky bottom-20 left-2">
+      <div className="sticky bottom-[20%] left-2">
         <img
-          src="https://localhost:8000/images/icons.png"
-          alt="Image du groupe"
+          src="http://localhost:8000/images/icons.png"
+          alt="Cliquer pour écrire un message"
           className="w-10 h-10 rounded-full"
           onClick={handleWriting}
         />
       </div>
-
-      <form
-        onSubmit={handleSubmit}
-        className={`sticky bottom-10 ${writing} writing-area`}
-      >
-        <div className="flex items-center p-4 bg-gray-100 border-t border-gray-300">
-          <textarea
-            className="flex-grow p-2 mr-4 text-sm bg-white border rounded-lg outline-none"
-            placeholder="Écrire un message..."
-            value={newMessage}
-            onChange={(e) => setNewMessage(e.target.value)}
-          />
-          <button className="px-4 py-2 text-white rounded-lg shadow-lg cursor-pointer bg-primary">
-            Envoyer
-          </button>
-        </div>
-      </form>
     </div>
   );
 }

@@ -8,7 +8,7 @@ import { AdminContextProvider } from "./context/useAdmin";
 window.MERCURE_PUBLIC_URL =
   process.env.MERCURE_PUBLIC_URL || "http://localhost:3001/.well-known/mercure";
 
-// window.BASE_URL = process.env.BASE_URL || "https://localhost:8000";
+// window.BASE_URL = process.env.BASE_URL || "http://localhost:8000";
 
 document.addEventListener("DOMContentLoaded", () => {
   const rootElement = document.getElementById("root");

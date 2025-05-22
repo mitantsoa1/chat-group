@@ -25,7 +25,7 @@ const Main = () => {
     const loadCurrentUser = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8000/api/user/current`
+          `http://localhost:8000/api/user/current`
         );
         if (response.data) {
           setCurrentUser(response.data);
@@ -50,7 +50,7 @@ const Main = () => {
       const loadFriends = async () => {
         try {
           setIsLoading(true);
-          const response = await axios.get(`https://localhost:8000/api/groups`);
+          const response = await axios.get(`http://localhost:8000/api/groups`);
 
           setGroups(response.data);
         } catch (error) {
@@ -98,7 +98,7 @@ const Main = () => {
       // return () => {
       //   eventSource.close();
       //   axios
-      //     .post("https://localhost:8000/api/user/disconnect")
+      //     .post("http://localhost:8000/api/user/disconnect")
       //     .catch((error) => {
       //       console.error("Erreur lors de la déconnexion:", error);
       //     });
@@ -111,7 +111,7 @@ const Main = () => {
   useEffect(() => {
     const connectUser = async () => {
       try {
-        const res = await axios.post("https://localhost:8000/api/user/connect");
+        const res = await axios.post("http://localhost:8000/api/user/connect");
       } catch (error) {
         console.error("Error connecting user:", error);
       }
@@ -122,14 +122,14 @@ const Main = () => {
     }
 
     const handleBeforeUnload = () => {
-      navigator.sendBeacon("https://localhost:8000/api/user/disconnect");
+      navigator.sendBeacon("http://localhost:8000/api/user/disconnect");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      axios.post("https://localhost:8000/api/user/disconnect");
+      axios.post("http://localhost:8000/api/user/disconnect");
     };
   }, [currentUser]);
 
@@ -138,7 +138,7 @@ const Main = () => {
     const loadNotMember = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8000/api/groups/${group.id}`
+          `http://localhost:8000/api/groups/${group.id}`
         );
 
         setNotMembers(response.data.notMembers);
@@ -154,7 +154,7 @@ const Main = () => {
   const handleAddMember = async (group, id) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/groups/add/${group}/${id}`
+        `http://localhost:8000/api/groups/add/${group}/${id}`
       );
 
       if (response.status == 200) {
@@ -170,21 +170,9 @@ const Main = () => {
 
   return (
     <>
-      <div className="w-full h-8 bg-gray-200">
-        <header className="fixed z-50 flex flex-col w-full h-8 p-0 mb-0 text-lg font-semibold bg-gray-300">
-          {isLoading ? (
-            <></>
-          ) : currentUser ? (
-            <div className="flex items-center space-x-2">
-              <div>{currentUser.username ?? ""}</div>
-            </div>
-          ) : (
-            <p>Erreur de chargement de l'utilisateur</p>
-          )}
-        </header>
-      </div>
       <div className="flex w-full h-full gap-0">
-        <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300">
+        {/* Sidebar gauche */}
+        <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300 overflow-y-auto">
           <p className="fixed p-1 pt-[10px] w-1/6 bg-primary text-white font-semibold text-sm justify-center h-8">
             Vos groupes
           </p>
@@ -206,9 +194,25 @@ const Main = () => {
             setGroups={setGroups}
           />
         </div>
+        {/* Main (centre) */}
         <div
-          className={`grow flex flex-col overflow-x-hidden bg-white shadow-lg `}
+          className={`grow flex flex-col overflow-x-hidden overflow-y-auto bg-white shadow-lg h-screen`}
         >
+          {/* Header centré */}
+          <div className="w-full h-8 bg-gray-200">
+            <header className="flex flex-col w-full h-8 p-0 mb-0 text-lg font-semibold bg-gray-300 items-center justify-center">
+              {isLoading ? (
+                <></>
+              ) : currentUser ? (
+                <div className="flex items-center space-x-2">
+                  <div>{currentUser.username ?? ""}</div>
+                </div>
+              ) : (
+                <p>Erreur de chargement de l'utilisateur</p>
+              )}
+            </header>
+          </div>
+          {/* Chat */}
           {selectedGroup && (
             <ChatGroup
               group={selectedGroup}
@@ -218,8 +222,9 @@ const Main = () => {
             />
           )}
         </div>
+        {/* Sidebar droite */}
         {isAdmin && selectedGroup && (
-          <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300">
+          <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300 overflow-y-auto">
             <p className="fixed p-1 pt-[10px] w-full bg-primary text-white font-semibold text-sm justify-center h-8">
               Pas encore membre de {selectedGroup.name}
             </p>

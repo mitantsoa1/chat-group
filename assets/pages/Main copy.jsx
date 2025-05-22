@@ -21,7 +21,7 @@ const Main = () => {
     const loadCurrentUser = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8000/api/user/current`
+          `http://localhost:8000/api/user/current`
         );
         setCurrentUser(response.data);
       } catch (error) {
@@ -39,7 +39,7 @@ const Main = () => {
         try {
           setIsLoading(true);
           const response = await axios.get(
-            `https://localhost:8000/api/friends/${currentUser.id}`
+            `http://localhost:8000/api/friends/${currentUser.id}`
           );
           setFriends(response.data.friends);
           setRandomNotFriends(response.data.notFriends);
@@ -87,7 +87,7 @@ const Main = () => {
       return () => {
         eventSource.close();
         axios
-          .post("https://localhost:8000/api/user/disconnect")
+          .post("http://localhost:8000/api/user/disconnect")
           .catch((error) => {
             console.error("Erreur lors de la déconnexion:", error);
           });
@@ -99,7 +99,7 @@ const Main = () => {
   useEffect(() => {
     const connectUser = async () => {
       try {
-        await axios.post("https://localhost:8000/api/user/connect");
+        await axios.post("http://localhost:8000/api/user/connect");
       } catch (error) {
         console.error("Error connecting user:", error);
       }
@@ -110,14 +110,14 @@ const Main = () => {
     }
 
     const handleBeforeUnload = () => {
-      navigator.sendBeacon("https://localhost:8000/api/user/disconnect");
+      navigator.sendBeacon("http://localhost:8000/api/user/disconnect");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      axios.post("https://localhost:8000/api/user/disconnect");
+      axios.post("http://localhost:8000/api/user/disconnect");
     };
   }, [currentUser]);
 
@@ -128,7 +128,7 @@ const Main = () => {
   const handleAddFriend = async (id) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/friends/add/${id}`
+        `http://localhost:8000/api/friends/add/${id}`
       );
       if (response.data.status === 200) {
         setPendingFriends((prevPending) => [
@@ -148,7 +148,7 @@ const Main = () => {
   const handlePendingFriendAction = async (pendingFriend, action) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/friends/${action}/${pendingFriend.id}`
+        `http://localhost:8000/api/friends/${action}/${pendingFriend.id}`
       );
 
       if (response.data.status === 200) {

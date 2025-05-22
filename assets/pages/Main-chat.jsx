@@ -22,7 +22,7 @@ const Main = () => {
     const loadCurrentUser = async () => {
       try {
         const response = await axios.get(
-          `https://localhost:8000/api/user/current`
+          `http://localhost:8000/api/user/current`
         );
         setCurrentUser(response.data);
         const roles = response.data.roles;
@@ -40,9 +40,7 @@ const Main = () => {
       const loadFriends = async () => {
         try {
           setIsLoading(true);
-          const response = await axios.get(
-            `https://localhost:8000/api/friends`
-          );
+          const response = await axios.get(`http://localhost:8000/api/friends`);
           setFriends(response.data.friends);
           setRandomNotFriends(response.data.notFriends);
           setPendingFriends(response.data.pendingFriends);
@@ -90,7 +88,7 @@ const Main = () => {
       // return () => {
       //   eventSource.close();
       //   axios
-      //     .post("https://localhost:8000/api/user/disconnect")
+      //     .post("http://localhost:8000/api/user/disconnect")
       //     .catch((error) => {
       //       console.error("Erreur lors de la déconnexion:", error);
       //     });
@@ -103,7 +101,7 @@ const Main = () => {
   useEffect(() => {
     const connectUser = async () => {
       try {
-        const res = await axios.post("https://localhost:8000/api/user/connect");
+        const res = await axios.post("http://localhost:8000/api/user/connect");
         // setFriends((prevFriends) =>
         //   prevFriends.map((friend) =>
         //     friend.id === data.userId
@@ -121,14 +119,14 @@ const Main = () => {
     }
 
     const handleBeforeUnload = () => {
-      navigator.sendBeacon("https://localhost:8000/api/user/disconnect");
+      navigator.sendBeacon("http://localhost:8000/api/user/disconnect");
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
-      axios.post("https://localhost:8000/api/user/disconnect");
+      axios.post("http://localhost:8000/api/user/disconnect");
     };
   }, [currentUser]);
 
@@ -139,7 +137,7 @@ const Main = () => {
   const handleAddFriend = async (id) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/friends/add/${id}`
+        `http://localhost:8000/api/friends/add/${id}`
       );
       if (response.data.status === 200) {
         setFriends((friends) => [...friends, response.data.friend]);
@@ -156,7 +154,7 @@ const Main = () => {
   const handlePendingFriendAction = async (pendingFriend, action) => {
     try {
       const response = await axios.post(
-        `https://localhost:8000/api/friends/${action}/${pendingFriend.id}`
+        `http://localhost:8000/api/friends/${action}/${pendingFriend.id}`
       );
 
       if (response.data.status === 200) {
