@@ -56,7 +56,7 @@ const ModalProfile = ({ member, BASE_URL, isOpen, onClose, currentUser }) => {
               {member.email}
             </span>
             <p className="text-sm text-base-content/70">
-              Date d'entrée: {returnDate(member.createdAt)}
+              Dérnière connexion: {returnDate(member.lastLoginAt)}
             </p>
           </div>
 

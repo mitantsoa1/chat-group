@@ -1,11 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
-import Input from "../components/Input";
 import Group from "../components/Groups";
 import ChatGroup from "../components/ChatGroup";
 import NotMembers from "../components/NotMembers";
-import ModalAddGroup from "../components/ModalAddGroup";
 import { AdminContext } from "../context/useAdmin";
+import { Loader2 } from "lucide-react";
 
 const Main = () => {
   const [groups, setGroups] = useState([]);
@@ -188,11 +187,17 @@ const Main = () => {
               </button>
             </div>
           )}
-          <Group
-            groups={groups}
-            handleGroupClick={handleGroupClick}
-            setGroups={setGroups}
-          />
+          {isLoading ? (
+            <div className="flex items-center justify-center h-full">
+              <Loader2 className="animate-spin" />
+            </div>
+          ) : (
+            <Group
+              groups={groups}
+              handleGroupClick={handleGroupClick}
+              setGroups={setGroups}
+            />
+          )}
         </div>
         {/* Main (centre) */}
         <div
@@ -202,10 +207,29 @@ const Main = () => {
           <div className="w-full h-8 bg-gray-200">
             <header className="flex flex-col w-full h-8 p-0 mb-0 text-lg font-semibold bg-gray-300 items-center justify-center">
               {isLoading ? (
-                <></>
+                <div>
+                  <Loader2 className="animate-spin" />
+                </div>
               ) : currentUser ? (
-                <div className="flex items-center space-x-2">
-                  <div>{currentUser.username ?? ""}</div>
+                <div className="flex flex-row justify-between items-center w-full px-2 md:px-4 lg:px-6">
+                  <div className="flex items-center space-x-2">
+                    <img
+                      src={`${BASE_URL}/uploads/profiles/${
+                        currentUser.profilePicture ?? "default_avatar.png"
+                      }`}
+                      alt={currentUser.username}
+                      className="w-8 h-8 rounded-full"
+                    />
+                    <p>{currentUser.username ?? ""}</p>
+                  </div>
+                  <div className="flex items-center ml-auto">
+                    <a
+                      href="/logout"
+                      className="mx-3 my-2 border font-light text-sm text-gray-700 hover:text-white hover:bg-gray-700 px-2 py-1 rounded"
+                    >
+                      Se déconnecter
+                    </a>
+                  </div>
                 </div>
               ) : (
                 <p>Erreur de chargement de l'utilisateur</p>

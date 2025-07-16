@@ -52,6 +52,8 @@ class AppAuthenticator extends AbstractLoginFormAuthenticator
 
         if ($user instanceof User) {
             $user->setIsConnected(true);
+            $user->setLastLoginAt(new \DateTimeImmutable());
+            $this->entityManager->persist($user);
             $this->entityManager->flush();
         }
         // For example:

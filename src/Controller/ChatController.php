@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Message;
 use App\Entity\User;
+use App\Service\EncodeMessageService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -38,7 +39,7 @@ class ChatController extends AbstractController
     }
 
     #[Route('/api/chat/send/{id}', name: 'chat_send', methods: ['POST'])]
-    public function send(Request $request, HubInterface $hub, int $id, TokenInterface $token): JsonResponse
+    public function send(Request $request, HubInterface $hub, int $id, TokenInterface $token,EncodeMessageService $encodeMessageService): JsonResponse
     {
         $chatMessage = new Message();
         $data = json_decode($request->getContent(), true);
@@ -64,7 +65,7 @@ class ChatController extends AbstractController
 
 
         $chatMessage->setUser($user);
-        $chatMessage->setBody($message);
+        $chatMessage->setBody($encodeMessageService->encodeMessage($message));
         $chatMessage->setCreatedAt(new \DateTimeImmutable());
         $chatMessage->addSendTo($id);
 
