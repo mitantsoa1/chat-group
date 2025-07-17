@@ -14,8 +14,8 @@ add('writable_dirs', []);
 // Hosts
 
 host('159.203.94.74')
-    ->set('remote_user', 'deployer')
-    ->set('deploy_path', '~/chat-group');
+    ->set('remote_user', 'cetr-user')
+    ->set('deploy_path', '~/applications/fkuzhttebh/public_html');
 
 // Hooks
 
