@@ -14,7 +14,9 @@ add('writable_dirs', []);
 // Hosts
 
 host('159.203.94.74')
+    ->set('ssh_multiplexing', false)
     ->set('remote_user', 'cetr-user')
+    ->set('identity_file', '~/.ssh/id_rsa')
     ->set('deploy_path', '~/applications/fkuzhttebh/public_html');
 
 // Hooks
