@@ -1,10 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Group from "../components/Groups";
-import ChatGroup from "../components/ChatGroup";
+import Chat from "../components/Chat";
 import NotMembers from "../components/NotMembers";
 import { AdminContext } from "../context/useAdmin";
-import { Loader2 } from "lucide-react";
+import { Loader2, Menu } from "lucide-react";
 
 const Main = () => {
   const [groups, setGroups] = useState([]);
@@ -12,6 +12,9 @@ const Main = () => {
   const [notMembers, setNotMembers] = useState([]);
   const [members, setMembers] = useState([]);
   const [selectedFriend, setSelectedFriend] = useState(null);
+
+  const [sidebarLeft, setSidebarLeft] = useState(false);
+  const [sidebarRight, setSidebarRight] = useState(false);
 
   const [currentUser, setCurrentUser] = useState(null);
   const [search, setSearch] = useState("");
@@ -167,13 +170,35 @@ const Main = () => {
     }
   };
 
+  // Gestionnaire pour fermer la sidebar lors d'un clic à l'extérieur
+  const handleClickOutside = (e) => {
+    if (sidebarLeft || sidebarRight) {
+      setSidebarLeft(false);
+      setSidebarRight(false);
+    }
+  };
+
   return (
     <>
-      <div className="flex w-full h-full gap-0">
+      <div className="flex w-full h-full gap-0" onClick={handleClickOutside}>
         {/* Sidebar gauche */}
-        <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300 overflow-y-auto">
-          <p className="fixed p-1 pt-[10px] w-1/6 bg-primary text-white font-semibold text-sm justify-center h-8">
-            Vos groupes
+        <div
+          className={`flex flex-col flex-none ${
+            sidebarLeft ? "w-2/6" : "w-1/6"
+          } h-screen bg-gray-300 overflow-y-auto`}
+        >
+          <p
+            className={`fixed p-1 pt-[10px] ${
+              sidebarLeft ? "w-2/6" : "w-1/6"
+            } bg-primary text-white font-semibold text-sm justify-center h-8`}
+          >
+            <span className="block sm:hidden">
+              <Menu
+                className="cursor-pointer"
+                onClick={() => setSidebarLeft(true)}
+              />
+            </span>
+            <span className="hidden sm:block">Vos groupes</span>
           </p>
           {isAdmin && (
             <div className="w-full mt-10 mb-4">
@@ -196,9 +221,11 @@ const Main = () => {
               groups={groups}
               handleGroupClick={handleGroupClick}
               setGroups={setGroups}
+              sidebarLeft={sidebarLeft}
             />
           )}
         </div>
+
         {/* Main (centre) */}
         <div
           className={`grow flex flex-col overflow-x-hidden overflow-y-auto bg-white shadow-lg h-screen`}
@@ -222,14 +249,16 @@ const Main = () => {
                     />
                     <p>{currentUser.username ?? ""}</p>
                   </div>
-                  <div className="flex items-center ml-auto">
-                    <a
-                      href="/logout"
-                      className="mx-3 my-2 border font-light text-sm text-gray-700 hover:text-white hover:bg-gray-700 px-2 py-1 rounded"
-                    >
-                      Se déconnecter
-                    </a>
-                  </div>
+                  {!sidebarLeft && !sidebarRight && (
+                    <div className="flex items-center ml-auto">
+                      <a
+                        href="/logout"
+                        className="mx-3 my-2 border font-light text-sm text-gray-700 hover:text-white hover:bg-gray-700 px-2 py-1 rounded"
+                      >
+                        Se déconnecter
+                      </a>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <p>Erreur de chargement de l'utilisateur</p>
@@ -238,7 +267,7 @@ const Main = () => {
           </div>
           {/* Chat */}
           {selectedGroup && (
-            <ChatGroup
+            <Chat
               group={selectedGroup}
               currentUser={currentUser}
               members={members}
@@ -246,11 +275,27 @@ const Main = () => {
             />
           )}
         </div>
+
         {/* Sidebar droite */}
         {isAdmin && selectedGroup && (
-          <div className="flex flex-col flex-none w-1/6 h-screen bg-gray-300 overflow-y-auto">
-            <p className="fixed p-1 pt-[10px] w-full bg-primary text-white font-semibold text-sm justify-center h-8">
-              Pas encore membre de {selectedGroup.name}
+          <div
+            className={`flex flex-col flex-none w-1/6 h-screen bg-gray-300 overflow-y-auto`}
+          >
+            <p
+              className={`fixed p-1 pt-[10px] w-1/6 bg-primary text-white font-semibold text-sm justify-center h-8`}
+            >
+              <span className="block sm:hidden">
+                {!sidebarRight ? (
+                  <Menu
+                    className="cursor-pointer"
+                    onClick={() => setSidebarRight(true)}
+                  />
+                ) : (
+                  <span className="hidden sm:block">Pas encore membre</span>
+                )}
+              </span>
+
+              <span className="hidden sm:block">Pas encore membre</span>
             </p>
             {notMembers.length > 0 && (
               <NotMembers

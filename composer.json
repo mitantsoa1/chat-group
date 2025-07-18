@@ -89,6 +89,11 @@
         ],
         "post-update-cmd": [
             "@auto-scripts"
+        ],
+        "dev": [
+            "docker compose up -d",
+            "symfony serve -d",
+            "npm run watch"
         ]
     },
     "conflict": {

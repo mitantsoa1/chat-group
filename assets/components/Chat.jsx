@@ -5,7 +5,7 @@ import formatDate from "../_helpers";
 import MemberListProfilePicture from "./MemberListProfilePicture";
 import { AdminContext } from "../context/useAdmin";
 
-function ChatGroup({ group, currentUser, members, setGroups }) {
+function Chat({ group, currentUser, members, setGroups }) {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [notMembers, setNotMembers] = useState([]);
@@ -137,7 +137,7 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
   return (
     <div className="flex flex-col h-full">
       <div
-        className={`sticky top-0 flex items-center h-8 p-1 text-lg font-semibold bg-white border-b border-gray-300 ${
+        className={`sticky top-0 flex items-center h-8 p-1 text-lg font-semibold  border-b border-gray-300 ${
           isAdmin ? "w-2/6" : "w-2/6"
         } `}
       >
@@ -240,4 +240,4 @@ function ChatGroup({ group, currentUser, members, setGroups }) {
   );
 }
 
-export default ChatGroup;
+export default Chat;

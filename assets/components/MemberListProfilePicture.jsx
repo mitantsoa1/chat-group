@@ -51,7 +51,7 @@ const MemberListProfilePicture = ({
       return members.map((member) => (
         <div
           key={member.id}
-          className="tooltip tooltip-bottom"
+          className="tooltip tooltip-bottom "
           data-tip={member.username}
         >
           <div className="avatar">
@@ -198,7 +198,7 @@ const MemberListProfilePicture = ({
           </div>
 
           {isAdmin && (
-            <div className="dropdown dropdown-end">
+            <div className="dropdown dropdown-end bg-white">
               <label tabIndex={0} className="btn btn-ghost btn-circle btn-sm">
                 <img
                   src={`${BASE_URL}/images/dots.png`}

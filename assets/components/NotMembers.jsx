@@ -10,7 +10,7 @@ function NotMembers({ notMembers, handleAddMember, group, setMembers }) {
           >
             <div className="flex items-center">
               <div className="w-10 h-10 mr-2 bg-white border-white rounded-full"></div>
-              <div className="font-medium text-gray-700">
+              <div className="font-medium text-gray-700 sm:block">
                 <span className="cursor-pointer">{notMember.username}</span>
               </div>
             </div>
