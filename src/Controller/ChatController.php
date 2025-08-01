@@ -18,6 +18,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use App\Repository\UserRepository;
+use App\Service\EncryptionService;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 
 class ChatController extends AbstractController
@@ -28,9 +29,7 @@ class ChatController extends AbstractController
 
     public function __construct(
         SerializerInterface $serializer,
-        UserPasswordHasherInterface $passwordHasher,
         EntityManagerInterface $entityManager,
-        ParameterBagInterface $parameter,
         string $mercurePublicUrl
     ) {
         $this->mercurePublicUrl = $mercurePublicUrl;
@@ -39,7 +38,7 @@ class ChatController extends AbstractController
     }
 
     #[Route('/api/chat/send/{id}', name: 'chat_send', methods: ['POST'])]
-    public function send(Request $request, HubInterface $hub, int $id, TokenInterface $token,EncodeMessageService $encodeMessageService): JsonResponse
+    public function send(Request $request, HubInterface $hub, int $id, TokenInterface $token, EncodeMessageService $encodeMessageService, EncryptionService $encryptionService): JsonResponse
     {
         $chatMessage = new Message();
         $data = json_decode($request->getContent(), true);
@@ -65,7 +64,7 @@ class ChatController extends AbstractController
 
 
         $chatMessage->setUser($user);
-        $chatMessage->setBody($encodeMessageService->encodeMessage($message));
+        $chatMessage->setBody($encryptionService->encrypt($encodeMessageService->encodeMessage($message)));
         $chatMessage->setCreatedAt(new \DateTimeImmutable());
         $chatMessage->addSendTo($id);
 
@@ -76,7 +75,7 @@ class ChatController extends AbstractController
         $messageData = [
             'message' => [
                 'id' => $chatMessage->getId(),
-                'body' => $chatMessage->getBody(),
+                'body' => $encryptionService->decrypt($chatMessage->getBody()),
                 'user_id' => $userId,
                 'created_at' => $chatMessage->getCreatedAt()->format('c'),
                 'send_to' => json_decode($id, true)
@@ -111,7 +110,7 @@ class ChatController extends AbstractController
     }
 
     #[Route('/api/chat/messages/{groupId}', name: 'app_chat_messages', methods: ['GET'])]
-    public function getMessages(Request $request, MessageRepository $messageRepository, $groupId): JsonResponse
+    public function getMessages(Request $request, MessageRepository $messageRepository, $groupId, EncryptionService $encryptionService): JsonResponse
     {
         $user = $this->getUser();
 
@@ -121,6 +120,9 @@ class ChatController extends AbstractController
 
         $messages = $messageRepository->findMessagesWithSendTo($user, $groupId);
 
+        foreach ($messages as &$message) {
+            $message["message"]["body"] = $encryptionService->decrypt($message["message"]["body"]);
+        }
         return $this->json($messages);
     }
 

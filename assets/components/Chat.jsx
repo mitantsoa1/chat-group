@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from "uuid";
 import formatDate from "../_helpers";
 import MemberListProfilePicture from "./MemberListProfilePicture";
 import { AdminContext } from "../context/useAdmin";
+import { Loader2 } from "lucide-react";
 
 function Chat({ group, currentUser, members, setGroups }) {
   const [messages, setMessages] = useState([]);

@@ -15,6 +15,7 @@
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <env name="APP_ENCRYPTION_KEY" value="09a7e37c3efe2f8e14c5d02d32f1582c0c59d6cb6f02bed0f88cb157529be4fa"/>
     </php>
 
     <testsuites>
